@@ -1,0 +1,75 @@
+import "package:flutter/material.dart";
+import 'package:shopping/widgets/themes.dart';
+import "package:velocity_x/velocity_x.dart";
+
+import "../models/catalog.dart";
+
+class HomeDetailPage extends StatelessWidget {
+  final Item catalog;
+  const HomeDetailPage({
+    Key? key,
+    required this.catalog,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+      ),
+      backgroundColor: MyTheme.cream,
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: ButtonBar(
+          alignment: MainAxisAlignment.spaceBetween,
+          buttonPadding: EdgeInsets.zero,
+          children: [
+            "\$${catalog.price}".text.bold.xl4.red800.make(),
+            ElevatedButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(MyTheme.darkblue),
+                  shape: MaterialStateProperty.all(
+                    StadiumBorder(),
+                  )),
+              child: "Add To Cart".text.make(),
+            ).wh(120, 50)
+          ],
+        ).p32(),
+      ),
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            Hero(
+                    tag: Key(catalog.id.toString()),
+                    child: Image.network(catalog.image))
+                .h32(context),
+            Expanded(
+                child: VxArc(
+                    height: 30.0,
+                    edge: VxEdge.TOP,
+                    arcType: VxArcType.CONVEY,
+                    child: Container(
+                      color: Colors.white,
+                      width: context.screenWidth,
+                      child: Column(
+                        children: [
+                          catalog.name.text.xl4
+                              .color(MyTheme.darkblue)
+                              .bold
+                              .make(),
+                          catalog.desc.text.make(),
+                          "Sed voluptua invidunt kasd dolore duo kasd vero clita clita nonumy, duo sit sit tempor rebum nonumy consetetur eos eos sit. Takimata et invidunt est tempor sed diam erat sed gubergren, lorem et ut takimata dolores amet clita dolor et, eos amet et."
+                              .text
+                              .make()
+                              .p16(),
+                        ],
+                      ).py64(),
+                    )))
+          ],
+        ),
+      ),
+    );
+  }
+}
