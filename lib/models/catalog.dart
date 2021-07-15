@@ -1,6 +1,15 @@
 import 'dart:convert';
 
 class CataLOgModel {
+  static final catModel = CataLOgModel.internal();
+
+  CataLOgModel.internal();
+  factory CataLOgModel() => catModel;
+  Item getById(int id) =>
+      items.firstWhere((element) => element.id == id, orElse: null);
+
+  Item getByPosition(int pos) => items[pos];
+
   static List<Item> items = [
     Item(1, "iPhone 12 Pro", "Apple iPhone 12th generation", 999, "#33505a",
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd0JhwLvm_uLDLc-la7hK9WyVpe9naJFcebKfhcICiq2KtvXDePNAU_9QO06LPcQ0K0fLByc7m&usqp=CAc"),
