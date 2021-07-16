@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:shopping/core/store.dart';
 import 'package:shopping/models/cart.dart';
 import 'package:shopping/widgets/themes.dart';
 
@@ -28,30 +29,35 @@ class CartPage extends StatelessWidget {
 }
 
 class CartTotal extends StatelessWidget {
-  final cart = CartModel();
-
   CartTotal({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final CartModel cart = (VxState.store as MyStore).cart;
     return SizedBox(
         height: 200,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            "\$${cart.TotalPrice}"
-                .text
-                .xl5
-                .color(context.theme.accentColor)
-                .make(),
+            VxConsumer(
+              notifications: {},
+              mutations: {RMutation},
+              builder: (BuildContext context, store, VxStatus? status) {
+                return "\$${cart.TotalPrice}"
+                    .text
+                    .xl5
+                    .color(MyTheme.darkblue)
+                    .make();
+              },
+            ),
             ElevatedButton(
                     onPressed: () {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: "Buying not supported yet".text.make()));
                     },
                     style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            context.theme.buttonColor)),
+                        backgroundColor:
+                            MaterialStateProperty.all(MyTheme.darkblue)),
                     child: "Buy".text.white.make())
                 .w32(context)
           ],
@@ -59,17 +65,13 @@ class CartTotal extends StatelessWidget {
   }
 }
 
-class CardList extends StatefulWidget {
+class CardList extends StatelessWidget {
   CardList({Key? key}) : super(key: key);
 
   @override
-  _CardListState createState() => _CardListState();
-}
-
-class _CardListState extends State<CardList> {
-  final cart = CartModel();
-  @override
   Widget build(BuildContext context) {
+    final CartModel cart = (VxState.store as MyStore).cart;
+    VxState.watch(context, on: [RMutation]);
     return cart.items.isEmpty
         ? "Nothing to show".text.makeCentered()
         : ListView.builder(
@@ -79,8 +81,7 @@ class _CardListState extends State<CardList> {
                 trailing: IconButton(
                   icon: Icon(Icons.remove_circle_outline),
                   onPressed: () {
-                    cart.remove(cart.items[index]);
-                    setState(() {});
+                    RMutation(cart.items[index]);
                   },
                 ),
                 title: cart.items[index].name.text.make()));
